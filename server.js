@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 //const serviceAccount = require('./serviceaccount/buildingschedulebackup-firebase-adminsdk-tr3vt-a54b70c6a9.json');
 const serviceAccount = require('./serviceaccount/buidlingschedule-firebase-adminsdk-r6sso-dcad8f49a9.json');
+const nodemailer = require("nodemailer");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -20,7 +21,6 @@ const db = admin.firestore();
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    //res.header('Access-Control-Allow-Headers', 'Content-Type');
     res.header("Access-Control-Allow-Headers", 'X-Requested-With, Content-Type, X-Token-Auth, Authorization');
     next();
 });
@@ -52,12 +52,37 @@ app.post('/api/account/forgotpass', function (req, res) {
         });
 });
 
+app.put('/api/account/changename/:id', (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const first = req.body.first;
+        const last = req.body.last;
+        if (!first) {
+            throw new Error("First name is blank");
+        }
+        if (!last) {
+            throw new Error("Last name is blank");
+        }
+        const data = {
+            FirstName: first,
+            LastName: last
+        };
+        const ref = db.collection('account').doc(id).set(data, { merge: true });
+        res.json({
+            id,
+            data
+        });
+    } catch (e) {
+        next(e);
+    }
+});
+
 app.put('/api/account/:id', function (req, res, next) {
     try {
         const id = req.params.id;
         const Password = req.body.Password;
         if (!id) throw new Error('id is blank');
-        if (!Password) throw new Error('Text is blank');
+        if (!Password) throw new Error('Password is blank');
         const data = {
             Password: Password
         };
@@ -71,21 +96,73 @@ app.put('/api/account/:id', function (req, res, next) {
     }
 });
 
+
+
 app.post('/api/account', function (req, res, next) {
     try {
         const account = req.body;
         if (!account) throw new Error('Account is blank');
-        const data = {
-            FirstName: account.FirstName,
-            LastName: account.LastName,
-            Email: account.Email,
-            Password: account.Password,
-        };
-        const ref = db.collection('account').add(data);
-        res.json({
-            id: ref.id,
-            data
-        });
+        var accountcollect = db.collection('account');
+        let query = accountcollect.where("Email", "==", account.Email).limit(1).get().then(
+            (snapshot) => {
+                if (!snapshot.empty) {
+                    throw new Error("The account is existed!");
+                } else {
+                    const data = {
+                        FirstName: account.FirstName,
+                        LastName: account.LastName,
+                        Email: account.Email,
+                        Password: account.Password,
+                    };
+                    const ref = db.collection('account').add(data);
+                    res.json({
+                        id: ref.id,
+                        data
+                    });
+
+                    const output = `
+                    <h3>Confirmation Email</h3>
+                    <p>Hi ${account.FirstName},</p>
+                    <p>Thanks you for your register at Heat Loss Calculation App. We would like you to go the link below to start login.<p>
+                    <p><a href="localhost:4200">Heat Loss App Link</a></p>
+                    `;
+                    let testAccount = nodemailer.createTestAccount();
+
+                    // create reusable transporter object using the default SMTP transport
+                    const transporter = nodemailer.createTransport({
+                        host: 'smtp.ethereal.email',
+                        port: 587,
+                        auth: {
+                            user: 'jayme.zieme57@ethereal.email',
+                            pass: 'uyQgncUyhW9EyF1VjD'
+                        },
+                        tls:{
+                            rejectUnauthorized: false
+                        }
+                    });
+
+                    // send mail with defined transport object
+                    let info = transporter.sendMail({
+                        from: '"Heatloss Email" <jayme.zieme57@ethereal.email>', // sender address
+                        to: ''+ account.Email, // list of receivers
+                        subject: 'Hello ✔', // Subject line
+                        text: 'Hello world?', // plain text body
+                        html: output // html body
+                    }, (err, info) =>{
+                        if(err){
+                            return console.error(err);
+                        }
+                        console.log('Message sent: %s', info.messageId);
+                        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    
+                        // Preview only available when sending through an Ethereal account
+                        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                    });
+                }
+            }
+        );
+
     } catch (e) {
         next(e);
     }
@@ -94,7 +171,6 @@ app.post('/api/account', function (req, res, next) {
 app.post('/api/login', function (req, res, next) {
 
     let email = req.body.Email;
-    let account = [];
     let accountobject = {};
     var citiesRef = db.collection('account');
     var query = citiesRef.where('Email', '==', email).limit(1).get()
@@ -189,7 +265,7 @@ app.post('/api/project', function (req, res, next) {
 
 app.delete('/api/project/:id', function (req, res, next) {
     try {
-        
+
         const projectId = req.params.id;
 
         if (!projectId) throw new Error('id is blank');
