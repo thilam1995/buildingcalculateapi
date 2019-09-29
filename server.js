@@ -5,6 +5,7 @@ const admin = require('firebase-admin');
 //const serviceAccount = require('./serviceaccount/buildingschedulebackup-firebase-adminsdk-tr3vt-a54b70c6a9.json');
 const serviceAccount = require('./serviceaccount/buidlingschedule-firebase-adminsdk-r6sso-dcad8f49a9.json');
 const nodemailer = require("nodemailer");
+var passencrypt = require("./service/passwordencrypt");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -17,6 +18,9 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+
+const passEncrypt = passencrypt.get("U2FsdGVkX19buDT5kgtzosFDVDFj/aeUuKUyJttjaPE=", "123456$#@$^@1ERF");
+
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -55,8 +59,8 @@ app.post('/api/account/forgotpass', function (req, res) {
 app.put('/api/account/changename/:id', (req, res, next) => {
     try {
         const id = req.params.id;
-        const first = req.body.first;
-        const last = req.body.last;
+        const first = req.body.FirstName;
+        const last = req.body.LastName;
         if (!first) {
             throw new Error("First name is blank");
         }
@@ -129,32 +133,43 @@ app.post('/api/account', function (req, res, next) {
                     let testAccount = nodemailer.createTestAccount();
 
                     // create reusable transporter object using the default SMTP transport
+                    // const transporter = nodemailer.createTransport({
+                    //     host: 'smtp.mailtrap.io',
+                    //     port: 2525,
+                    //     auth: {
+                    //         user: '9bfda3ce27b2a1',
+                    //         pass: '4eb463e1821ab3'
+                    //     },
+                    //     tls: {
+                    //         rejectUnauthorized: false
+                    //     }
+                    // });
+
                     const transporter = nodemailer.createTransport({
-                        host: 'smtp.ethereal.email',
-                        port: 587,
+                        service: 'gmail',
                         auth: {
-                            user: 'jayme.zieme57@ethereal.email',
-                            pass: 'uyQgncUyhW9EyF1VjD'
+                            user: 'thilam95foehn@gmail.com',
+                            pass: passEncrypt
                         },
-                        tls:{
+                        tls: {
                             rejectUnauthorized: false
                         }
                     });
 
                     // send mail with defined transport object
                     let info = transporter.sendMail({
-                        from: '"Heatloss Email" <jayme.zieme57@ethereal.email>', // sender address
-                        to: ''+ account.Email, // list of receivers
+                        from: '"Heatloss Cal No Reply" <thilam95foehn@gmail.com>', // sender address
+                        to: account.Email, // list of receivers
                         subject: 'Hello ✔', // Subject line
                         text: 'Hello world?', // plain text body
                         html: output // html body
-                    }, (err, info) =>{
-                        if(err){
+                    }, (err, info) => {
+                        if (err) {
                             return console.error(err);
                         }
                         console.log('Message sent: %s', info.messageId);
                         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-    
+
                         // Preview only available when sending through an Ethereal account
                         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
                         // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
@@ -178,14 +193,16 @@ app.post('/api/login', function (req, res, next) {
             if (snapshot.empty) {
                 console.log('No matching documents.');
                 return;
+            } else {
+                snapshot.forEach(doc => {
+                    //console.log(doc.id, '=>', doc.data());
+                    accountobject = { id: doc.id, data: doc.data() };
+                    //account.push(accountobject);
+                });
+                res.json(accountobject);
             }
 
-            snapshot.forEach(doc => {
-                //console.log(doc.id, '=>', doc.data());
-                accountobject = { id: doc.id, data: doc.data() };
-                //account.push(accountobject);
-            });
-            res.json(accountobject);
+
         })
         .catch(err => {
             console.log('Error getting documents', err);
@@ -221,6 +238,30 @@ app.get('/api/project/:id', function (req, res) {
         });
 });
 
+app.get('/api/projectid/:projectid', function (req, res, next) {
+
+    try {
+        let id = req.params.projectid;
+        if (!id) throw new Error('id is blank');
+        else {
+            const project = db.collection('projectbuilding').doc(id).get();
+            project.then(e => {
+                res.json({
+                    id: e.id,
+                    data: e.data()
+                });
+            }).catch(e => {
+                throw new Error('project does not exists');
+            });
+
+        }
+
+    } catch (e) {
+        next(e);
+    }
+
+});
+
 app.put('/api/project/:id', function (req, res, next) {
     try {
         const id = req.params.id;
@@ -250,7 +291,6 @@ app.post('/api/project', function (req, res, next) {
             ProjectName: project.ProjectName,
             DateCreated: project.DateCreated,
             DateModified: project.DateModified,
-            DesignList: project.DesignList,
             UserID: project.UserID
         };
         const ref = db.collection('projectbuilding').add(data);
