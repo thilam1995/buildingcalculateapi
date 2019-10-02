@@ -110,7 +110,8 @@ app.post('/api/account', function (req, res, next) {
         let query = accountcollect.where("Email", "==", account.Email).limit(1).get().then(
             (snapshot) => {
                 if (!snapshot.empty) {
-                    throw new Error("The account is existed!");
+                    res.status(400).json("Sorry! The account is existed!");
+                    return;
                 } else {
                     const data = {
                         FirstName: account.FirstName,
@@ -192,7 +193,7 @@ app.post('/api/login', function (req, res, next) {
         .then(snapshot => {
             if (snapshot.empty) {
                 console.log('No matching documents.');
-                return;
+                res.status(400).json("No Account avalaible.");
             } else {
                 snapshot.forEach(doc => {
                     //console.log(doc.id, '=>', doc.data());
