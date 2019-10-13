@@ -388,21 +388,25 @@ app.get('/api/design/:projectid/:userid/:designid', function (req, res) {
         });
 });
 
-app.get('/api/design/last/:userid', function (req, res) {
-    const userid = req.params.userid;
+app.get('/api/design/last/:datetime', function (req, res) {
+    const userid = req.params.datetime;
     //const projectid = req.params.projectid;
     if (!userid) throw new Error('User ID or Project ID is blank');
-    let design = [];
     let object = {};
-    db.collection('designbuilding').where("UserID", "==", userid).get()
+    db.collection('designbuilding').where("DateCreated", "==", userid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
-                object = { id: doc.id, data: doc.data() }
-                design.push(object);
+                if(doc.exists){
+                    object = { id: doc.id, data: doc.data() };
+                    res.json(object);
+                }else{
+                    res.status(400).json("No document found!");
+                }
+                
             });
-            //console.log(design);
-            res.json(design);
+            
+
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -423,9 +427,13 @@ app.put('/api/design/:id', function (req, res, next) {
             Typology: design.Typology,
             NumofHabitationroom: design.NumofHabitationroom,
             FloorArea: design.FloorArea,
-            Location: design.Location,
             ProjectID: design.ProjectID,
-            UserID: design.UserID
+            DateCreated: design.DateCreated,
+            Climatetype: design.Climatetype,
+            UserID: design.UserID,
+            StreetName: design.StreetName,
+            City: design.City,
+            StateName: design.StateName
         };
         const ref = db.collection('designbuilding').doc(id).set(data, { merge: true });
         res.json({
@@ -440,6 +448,7 @@ app.put('/api/design/:id', function (req, res, next) {
 app.post('/api/design', function (req, res, next) {
     try {
         const design = req.body;
+        console.log(design);
         if (!design) throw new Error('Design is blank');
         const data = {
             DesignName: design.DesignName,
@@ -449,9 +458,13 @@ app.post('/api/design', function (req, res, next) {
             Typology: design.Typology,
             NumofHabitationroom: design.NumofHabitationroom,
             FloorArea: design.FloorArea,
-            Location: design.Location,
             ProjectID: design.ProjectID,
-            UserID: design.UserID
+            DateCreated: design.DateCreated,
+            Climatetype: design.Climatetype,
+            UserID: design.UserID,
+            StreetName: design.StreetName,
+            City: design.City,
+            StateName: design.StateName
         };
         const ref = db.collection('designbuilding').add(data);
         res.json({
@@ -484,43 +497,12 @@ app.delete('/api/design/:id', function (req, res, next) {
     }
 });
 
-//target rating
-app.get('/api/targetrating', function (req, res) {
-    let targetrating = [];
-    let object = {};
-    db.collection('targetrating').get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                //console.log(doc.id, '=>', doc.data());
-                object = { id: doc.id, data: doc.data() }
-                targetrating.push(object);
-            });
-            res.json(targetrating);
-        })
-        .catch((err) => {
-            console.log('Error getting documents', err);
-        });
-});
 
 // app.put('/api/targetrating', function (req, res, next) {
 //     console.log("HTTP PUT Request");
 //     res.send("HTTP PUT Request");
 // });
 
-app.post('/api/targetrating', function (req, res, next) {
-    try {
-        const text = req.body.text;
-        if (!text) throw new Error('Text is blank');
-        const data = { text };
-        const ref = db.collection('targetrating').add(data);
-        res.json({
-            id: ref.id,
-            data
-        });
-    } catch (e) {
-        next(e);
-    }
-});
 
 // app.delete('/api/targetrating', function (req, res, next) {
 //     console.log("HTTP DELETE Request");
@@ -528,22 +510,6 @@ app.post('/api/targetrating', function (req, res, next) {
 // });
 
 //location section
-app.get('/api/location', function (req, res) {
-    let location = [];
-    let object = {};
-    db.collection('location').orderBy("place", "asc").get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
-                //console.log(doc.id, '=>', doc.data());
-                object = { id: doc.id, data: doc.data() }
-                location.push(object);
-            });
-            res.json(location);
-        })
-        .catch((err) => {
-            console.log('Error getting documents', err);
-        });
-});
 
 // app.put('/api/location', function (req, res, next) {
 //     try {
@@ -562,20 +528,6 @@ app.get('/api/location', function (req, res) {
 //     }
 // });
 
-app.post('/api/location', function (req, res, next) {
-    try {
-        const text = req.body.text;
-        if (!text) throw new Error('Text is blank');
-        const data = { text };
-        const ref = db.collection('location').add(data);
-        res.json({
-            id: ref.id,
-            data
-        });
-    } catch (e) {
-        next(e);
-    }
-});
 
 
 
