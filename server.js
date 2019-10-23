@@ -284,6 +284,25 @@ app.put('/api/project/:id', function (req, res, next) {
     }
 });
 
+app.put('/api/project/updatedate/:id', function (req, res, next) {
+    try {
+        const id = req.params.id;
+        const project = req.body;
+        if (!id) throw new Error('id is blank');
+        if (!project) throw new Error('Project is blank');
+        const data = {
+            DateModified: project.DateModified
+        };
+        const ref = db.collection('projectbuilding').doc(id).set(data, { merge: true });
+        res.json({
+            id,
+            data
+        });
+    } catch (e) {
+        next(e);
+    }
+});
+
 app.post('/api/project', function (req, res, next) {
     try {
         const project = req.body;
@@ -433,7 +452,8 @@ app.put('/api/design/:id', function (req, res, next) {
             UserID: design.UserID,
             StreetName: design.StreetName,
             City: design.City,
-            StateName: design.StateName
+            StateName: design.StateName,
+            DateUpdate: design.DateUpdate
         };
         const ref = db.collection('designbuilding').doc(id).set(data, { merge: true });
         res.json({
@@ -464,7 +484,8 @@ app.post('/api/design', function (req, res, next) {
             UserID: design.UserID,
             StreetName: design.StreetName,
             City: design.City,
-            StateName: design.StateName
+            StateName: design.StateName,
+            DateUpdate: design.DateUpdate
         };
         const ref = db.collection('designbuilding').add(data);
         res.json({
