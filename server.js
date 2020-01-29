@@ -3,8 +3,8 @@ var app = express();
 const bodyParser = require('body-parser');
 //const admin = require('firebase-admin');
 //const serviceAccount = require('./serviceaccount/buildingschedulebackup-firebase-adminsdk-tr3vt-a54b70c6a9.json');
-const serviceAccount = require('./serviceaccount/buidlingschedule-firebase-adminsdk-r6sso-dcad8f49a9.json');
-const nodemailer = require("nodemailer");
+// const serviceAccount = require('./serviceaccount/buidlingschedule-firebase-adminsdk-r6sso-dcad8f49a9.json');
+// const nodemailer = require("nodemailer");
 const buildingrouter = require('./route/apiroute');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
