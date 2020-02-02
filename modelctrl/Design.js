@@ -95,7 +95,6 @@ postdesign = (req, res, next) => {
             CompletedBy: design.CompletedBy,
             DrawingSet: design.DrawingSet,
             Typology: design.Typology,
-            NumofHabitationroom: design.NumofHabitationroom,
             FloorArea: design.FloorArea,
             ProjectID: design.ProjectID,
             DateCreated: design.DateCreated,
@@ -103,7 +102,7 @@ postdesign = (req, res, next) => {
             UserID: design.UserID,
             StreetName: design.StreetName,
             City: design.City,
-            StateName: design.StateName,
+            Postcode: design.Postcode,
             DateUpdate: design.DateUpdate
         };
         const ref = db.collection('designbuilding').add(data);
@@ -128,7 +127,6 @@ updatedesign = (req, res, next) => {
             CompletedBy: design.CompletedBy,
             DrawingSet: design.DrawingSet,
             Typology: design.Typology,
-            NumofHabitationroom: design.NumofHabitationroom,
             FloorArea: design.FloorArea,
             ProjectID: design.ProjectID,
             DateCreated: design.DateCreated,
@@ -136,7 +134,7 @@ updatedesign = (req, res, next) => {
             UserID: design.UserID,
             StreetName: design.StreetName,
             City: design.City,
-            StateName: design.StateName,
+            Postcode: design.Postcode,
             DateUpdate: design.DateUpdate
         };
         const ref = db.collection('designbuilding').doc(id).set(data, { merge: true });

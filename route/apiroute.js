@@ -24,8 +24,8 @@ router.post('/login', accountctrl.accountLogin);
 // router.delete('/account');
 
 //Part for project
-router.get('/project/:id', projectctrl.getProjectbyid);
-router.get('/projectid/:projectid', projectctrl.getProjectbyuserid);
+router.get('/project/:id', projectctrl.getProjectbyuserid);
+router.get('/projectid/:projectid', projectctrl.getProjectbyid);
 router.put('/project/:id', projectctrl.updateProject);
 //router.put('/project/updatedate/:id');
 router.post('/project', projectctrl.insertproject);

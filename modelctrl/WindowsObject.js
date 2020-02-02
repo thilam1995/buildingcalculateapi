@@ -28,7 +28,6 @@ insertwindow = (req, res, next) => {
             Height: window.Height,
             OWA: window.OWA,
             Area: window.Area,
-            ShadePercent: window.ShadePercent,
             DesignID: window.DesignID,
             ProjectID: window.ProjectID,
             UserID: window.UserID
@@ -56,7 +55,6 @@ updatewindow = (req, res, next) => {
             Height: window.Height,
             OWA: window.OWA,
             Area: window.Area,
-            ShadePercent: window.ShadePercent,
             DesignID: window.DesignID,
             ProjectID: window.ProjectID,
             UserID: window.UserID
