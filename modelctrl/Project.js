@@ -1,10 +1,10 @@
 const db = require("../connection/firebasecon");
-getProjectbyuserid = (req, res, next) => {
+getProjectbyuserid = async(req, res, next) => {
     let project = [];
     let object = {};
     let projectdb = db.collection('projectbuilding');
     //console.log(req.params.id);
-    projectdb.where("UserID", "==", req.params.id).get()
+    const ref = await projectdb.where("UserID", "==", req.params.id).get()
         .then((snapshot) => {
             // if (snapshot.empty) {
             //     console.log('No matching documents.');
@@ -22,12 +22,12 @@ getProjectbyuserid = (req, res, next) => {
         });
 };
 
-getProjectbyid = (req, res, next) => {
+getProjectbyid = async(req, res, next) => {
     try {
         let id = req.params.projectid;
         if (!id) throw new Error('id is blank');
         else {
-            const project = db.collection('projectbuilding').doc(id).get();
+            const project = await db.collection('projectbuilding').doc(id).get();
             project.then(e => {
                 res.json({
                     id: e.id,
@@ -44,7 +44,7 @@ getProjectbyid = (req, res, next) => {
     }
 };
 
-insertproject = (req, res, next) => {
+insertproject = async(req, res, next) => {
     try {
         const project = req.body;
         if (!project.ProjectName) throw new Error('Project Name is blank');
@@ -54,7 +54,7 @@ insertproject = (req, res, next) => {
             DateModified: project.DateModified,
             UserID: project.UserID
         };
-        const ref = db.collection('projectbuilding').add(data);
+        const ref = await db.collection('projectbuilding').add(data);
         res.json({
             id: ref.id,
             data
@@ -64,7 +64,7 @@ insertproject = (req, res, next) => {
     }
 };
 
-updateProject = (req, res, next) => {
+updateProject = async(req, res, next) => {
     try {
         const id = req.params.id;
         const project = req.body;
@@ -75,7 +75,7 @@ updateProject = (req, res, next) => {
             DateCreated: project.DateCreated,
             DateModified: project.DateModified
         };
-        const ref = db.collection('projectbuilding').doc(id).set(data, { merge: true });
+        const ref = await db.collection('projectbuilding').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -85,14 +85,14 @@ updateProject = (req, res, next) => {
     }
 };
 
-deleteproject = (req, res, next) => {
+deleteproject = async(req, res, next) => {
     try {
 
         const projectId = req.params.id;
 
         if (!projectId) throw new Error('id is blank');
 
-        db.collection('projectbuilding')
+        await db.collection('projectbuilding')
             .doc(projectId)
             .delete();
 

@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getroomhabitbydesignid = (req, res, next) => {
+getroomhabitbydesignid = async(req, res, next) => {
     let designid = req.params.id;
     let floormodel = [];
     let object = {};
-    db.collection('roomhabit').where("DesignID", "==", designid).get()
+    const ref = await db.collection('roomhabit').where("DesignID", "==", designid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getroomhabitbydesignid = (req, res, next) => {
         });
 };
 
-updateroomhabit = (req, res, next) => {
+updateroomhabit = async(req, res, next) => {
     try {
         const id = req.params.id;
         const room = req.body;
@@ -32,7 +32,7 @@ updateroomhabit = (req, res, next) => {
             DesignID: room.DesignID,
             UserID: room.UserID
         };
-        const ref = db.collection('roomhabit').doc(id).set(data, { merge: true });
+        const ref = await db.collection('roomhabit').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -42,7 +42,7 @@ updateroomhabit = (req, res, next) => {
     }
 };
 
-postroomhabit = (req, res, next) =>{
+postroomhabit = async(req, res, next) =>{
     try {
         const room = req.body;
         if (!room) throw new Error('Text is blank');
@@ -55,7 +55,7 @@ postroomhabit = (req, res, next) =>{
             DesignID: room.DesignID,
             UserID: room.UserID
         };
-        const ref = db.collection('roomhabit').add(data);
+        const ref = await db.collection('roomhabit').add(data);
         res.json({
             id: ref.id,
             data
@@ -65,14 +65,14 @@ postroomhabit = (req, res, next) =>{
     }
 };
 
-deleteroomhabit = (req, res, next) => {
+deleteroomhabit = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('roomhabit')
+        await db.collection('roomhabit')
             .doc(Id)
             .delete();
 

@@ -3,11 +3,12 @@ var passencrypt = require("../service/passwordencrypt");
 const db = require("../connection/firebasecon");
 
 const passEncrypt = passencrypt.get("U2FsdGVkX19buDT5kgtzosFDVDFj/aeUuKUyJttjaPE=", "123456$#@$^@1ERF");
-forgotPassword = (req, res, next) => {
+
+forgotPassword = async (req, res, next) => {
     let account = [];
     let object = {};
     let body = req.body;
-    db.collection('account').where("Email", "==", body.Email).get()
+    const ref = await db.collection('account').where("Email", "==", body.Email).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -21,7 +22,7 @@ forgotPassword = (req, res, next) => {
         });
 };
 
-changeName = (req, res, next) => {
+changeName = async (req, res, next) => {
     try {
         const id = req.params.id;
         const first = req.body.FirstName;
@@ -36,7 +37,7 @@ changeName = (req, res, next) => {
             FirstName: first,
             LastName: last
         };
-        const ref = db.collection('account').doc(id).set(data, { merge: true });
+        const ref = await db.collection('account').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -46,7 +47,7 @@ changeName = (req, res, next) => {
     }
 };
 
-updateAccount = (req, res, next) => {
+updateAccount = async (req, res, next) => {
     try {
         const id = req.params.id;
         const Password = req.body.Password;
@@ -55,7 +56,7 @@ updateAccount = (req, res, next) => {
         const data = {
             Password: Password
         };
-        const ref = db.collection('account').doc(id).set(data, { merge: true });
+        const ref = await db.collection('account').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -65,13 +66,13 @@ updateAccount = (req, res, next) => {
     }
 };
 
-registerAccount = (req, res, next) => {
+registerAccount = async(req, res, next) => {
     try {
         const account = req.body;
         if (!account) throw new Error('Account is blank');
         var accountcollect = db.collection('account');
-        let query = accountcollect.where("Email", "==", account.Email).limit(1).get().then(
-            (snapshot) => {
+        let query = await accountcollect.where("Email", "==", account.Email).limit(1).get().then(
+            async(snapshot) => {
                 if (!snapshot.empty) {
                     res.status(400).json("Sorry! The account is existed!");
                     return;
@@ -82,7 +83,7 @@ registerAccount = (req, res, next) => {
                         Email: account.Email,
                         Password: account.Password,
                     };
-                    const ref = db.collection('account').add(data);
+                    const ref = await db.collection('account').add(data);
                     res.status(200).json({
                         id: ref.id,
                         data
@@ -147,11 +148,11 @@ registerAccount = (req, res, next) => {
     }
 };
 
-accountLogin = (req, res, next) => {
+accountLogin = async(req, res, next) => {
     let email = req.body.Email;
     let accountobject = {};
-    var citiesRef = db.collection('account');
-    var query = citiesRef.where('Email', '==', email).limit(1).get()
+    var accountRef = await db.collection('account');
+    var query = accountRef.where('Email', '==', email).limit(1).get()
         .then(snapshot => {
             if (snapshot.empty) {
                 console.log('No matching documents.');

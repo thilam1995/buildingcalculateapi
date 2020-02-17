@@ -1,10 +1,10 @@
 const db = require("../connection/firebasecon");
 
-getwallwindowdoormodelbyID = (req, res, next) => {
+getwallwindowdoormodelbyID = async(req, res, next) => {
     let designid = req.params.id;
     let wallwindowdoormodel = [];
     let object = {};
-    db.collection('wallwindowdoormodel').where("DesignID", "==", designid).get()
+    const ref = await db.collection('wallwindowdoormodel').where("DesignID", "==", designid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -18,7 +18,7 @@ getwallwindowdoormodelbyID = (req, res, next) => {
         });
 };
 
-insertwallwindowdoormodel = (req, res, next) => {
+insertwallwindowdoormodel = async(req, res, next) => {
     try {
         const wallwindowdoormodel = req.body;
         if (!wallwindowdoormodel) throw new Error('Text is blank');
@@ -30,7 +30,7 @@ insertwallwindowdoormodel = (req, res, next) => {
             DesignID: wallwindowdoormodel.DesignID,
             UserID: wallwindowdoormodel.UserID
         };
-        const ref = db.collection('wallwindowdoormodel').add(data);
+        const ref = await db.collection('wallwindowdoormodel').add(data);
         res.json({
             id: ref.id,
             data
@@ -40,7 +40,7 @@ insertwallwindowdoormodel = (req, res, next) => {
     }
 };
 
-updatewallwindowdoormodel = (req, res, next) => {
+updatewallwindowdoormodel = async(req, res, next) => {
     try {
         const id = req.params.id;
         const wallwindowdoormodel = req.body;
@@ -54,7 +54,7 @@ updatewallwindowdoormodel = (req, res, next) => {
             DesignID: wallwindowdoormodel.DesignID,
             UserID: wallwindowdoormodel.UserID
         };
-        const ref = db.collection('wallwindowdoormodel').doc(id).set(data, { merge: true });
+        const ref = await db.collection('wallwindowdoormodel').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -64,14 +64,14 @@ updatewallwindowdoormodel = (req, res, next) => {
     }
 };
 
-deletewallwindowdoormodel = (req, res, next) => {
+deletewallwindowdoormodel = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('wallwindowdoormodel')
+        await db.collection('wallwindowdoormodel')
             .doc(Id)
             .delete();
 

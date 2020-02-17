@@ -1,10 +1,11 @@
 const db = require("../connection/firebasecon");
-getdesignbyprojectID = (req, res, next) => {
+
+getdesignbyprojectID = async(req, res, next) => {
     const projectid = req.params.projectid;
     if (!projectid) throw new Error('User ID or Project ID is blank');
     let design = [];
     let object = {};
-    db.collection('designbuilding').where("ProjectID", "==", projectid).get()
+    const ref = await db.collection('designbuilding').where("ProjectID", "==", projectid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -18,12 +19,12 @@ getdesignbyprojectID = (req, res, next) => {
         });
 };
 
-getdesignbyid = (req, res, next) => {
+getdesignbyid = async(req, res, next) => {
     const designid = req.params.designid;
     if (!designid) throw new Error('User ID or Project ID is blank');
     //let design = [];
     let object = {};
-    db.collection('designbuilding').doc(designid).get()
+    const ref = await db.collection('designbuilding').doc(designid).get()
         .then(function (doc) {
             if (doc.exists) {
                 object = { id: doc.id, data: doc.data() }
@@ -38,14 +39,14 @@ getdesignbyid = (req, res, next) => {
         });
 };
 
-getalldesignbyprojectID = (req, res, next) => {
+getalldesignbyprojectID = async(req, res, next) => {
     const userid = req.params.userid;
     const designid = req.params.designid;
     const projectid = req.params.projectid;
     if (!projectid || !userid || !designid) throw new Error('User ID, DesignID or Project ID is blank');
     let design = [];
     let object = {};
-    db.collection('designbuilding').where("ProjectID", "==", projectid).get()
+    const ref = await db.collection('designbuilding').where("ProjectID", "==", projectid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -59,12 +60,12 @@ getalldesignbyprojectID = (req, res, next) => {
         });
 };
 
-getdesignbydatecreated = (req, res, next) => {
+getdesignbydatecreated = async(req, res, next) => {
     const userid = req.params.datetime;
     //const projectid = req.params.projectid;
     if (!userid) throw new Error('User ID or Project ID is blank');
     let object = {};
-    db.collection('designbuilding').where("DateCreated", "==", userid).get()
+    const ref = await db.collection('designbuilding').where("DateCreated", "==", userid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -84,7 +85,7 @@ getdesignbydatecreated = (req, res, next) => {
         });
 };
 
-postdesign = (req, res, next) => {
+postdesign = async(req, res, next) => {
     try {
         const design = req.body;
         console.log(design);
@@ -105,7 +106,7 @@ postdesign = (req, res, next) => {
             Postcode: design.Postcode,
             DateUpdate: design.DateUpdate
         };
-        const ref = db.collection('designbuilding').add(data);
+        const ref = await db.collection('designbuilding').add(data);
         res.json({
             id: ref.id,
             data
@@ -115,7 +116,7 @@ postdesign = (req, res, next) => {
     }
 };
 
-updatedesign = (req, res, next) => {
+updatedesign = async(req, res, next) => {
     try {
         const id = req.params.id;
         const design = req.body;
@@ -137,7 +138,7 @@ updatedesign = (req, res, next) => {
             Postcode: design.Postcode,
             DateUpdate: design.DateUpdate
         };
-        const ref = db.collection('designbuilding').doc(id).set(data, { merge: true });
+        const ref = await db.collection('designbuilding').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -147,14 +148,14 @@ updatedesign = (req, res, next) => {
     }
 };
 
-deletedesign = (req, res, next) => {
+deletedesign = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('designbuilding')
+        await db.collection('designbuilding')
             .doc(Id)
             .delete();
 

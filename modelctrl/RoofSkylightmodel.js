@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getroofskylightmodelbyID = (req, res, next) => {
+getroofskylightmodelbyID = async(req, res, next) => {
     let projectid = req.params.id;
     let roofskylightmodel = [];
     let object = {};
-    db.collection('roofskylightmodel').where("DesignID", "==", projectid).get()
+    const ref = await db.collection('roofskylightmodel').where("DesignID", "==", projectid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getroofskylightmodelbyID = (req, res, next) => {
         });
 };
 
-insertroofskylightmodel = (req, res, next) => {
+insertroofskylightmodel = async(req, res, next) => {
     try {
         const roofskylightmodel = req.body;
         if (!roofskylightmodel) throw new Error('Text is blank');
@@ -28,7 +28,7 @@ insertroofskylightmodel = (req, res, next) => {
             DesignID: roofskylightmodel.DesignID,
             UserID: roofskylightmodel.UserID
         };
-        const ref = db.collection('roofskylightmodel').add(data);
+        const ref = await db.collection('roofskylightmodel').add(data);
         res.json({
             id: ref.id,
             data
@@ -38,7 +38,7 @@ insertroofskylightmodel = (req, res, next) => {
     }
 };
 
-updateroofskylightmodel = (req, res, next) => {
+updateroofskylightmodel = async(req, res, next) => {
     try {
         const id = req.params.id;
         const roofskylightmodel = req.body;
@@ -51,7 +51,7 @@ updateroofskylightmodel = (req, res, next) => {
             DesignID: roofskylightmodel.DesignID,
             UserID: roofskylightmodel.UserID
         };
-        const ref = db.collection('roofskylightmodel').doc(id).set(data, { merge: true });
+        const ref = await db.collection('roofskylightmodel').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -62,14 +62,14 @@ updateroofskylightmodel = (req, res, next) => {
 
 };
 
-deleteroofskylightmodel = (req, res, next) => {
+deleteroofskylightmodel = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('roofskylightmodel')
+        await db.collection('roofskylightmodel')
             .doc(Id)
             .delete();
 

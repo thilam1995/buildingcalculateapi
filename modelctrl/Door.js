@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getdoorbyID = (req, res, next) => {
+getdoorbyID = async(req, res, next) => {
     let door = [];
     let object = {};
     let id = req.params.id;
-    db.collection('door').where("DesignID", "==", id).get()
+    const ref = await db.collection('door').where("DesignID", "==", id).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getdoorbyID = (req, res, next) => {
         });
 };
 
-insertdoor = (req, res, next) => {
+insertdoor = async(req, res, next) => {
     try {
         const door = req.body;
         if (!door) throw new Error('Text is blank');
@@ -31,7 +31,7 @@ insertdoor = (req, res, next) => {
             ProjectID: door.ProjectID,
             UserID: door.UserID
         };
-        const ref = db.collection('door').add(data);
+        const ref = await db.collection('door').add(data);
         res.json({
             id: ref.id,
             data
@@ -41,7 +41,7 @@ insertdoor = (req, res, next) => {
     }
 };
 
-updatedoor = (req, res, next) => {
+updatedoor = async(req, res, next) => {
     try {
         const id = req.params.id;
         const door = req.body;
@@ -57,7 +57,7 @@ updatedoor = (req, res, next) => {
             ProjectID: door.ProjectID,
             UserID: door.UserID
         };
-        const ref = db.collection('door').doc(id).set(data, { merge: true });
+        const ref = await db.collection('door').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -67,14 +67,14 @@ updatedoor = (req, res, next) => {
     }
 };
 
-deletedoor = (req, res, next) => {
+deletedoor = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('door')
+        await db.collection('door')
             .doc(Id)
             .delete();
 

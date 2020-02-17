@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getroofbyID = (req, res, next) => {
+getroofbyID = async(req, res, next) => {
     let roof = [];
     let object = {};
     let id = req.params.id;
-    db.collection('roof').where("DesignID", "==", id).get()
+    const ref = await db.collection('roof').where("DesignID", "==", id).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getroofbyID = (req, res, next) => {
         });
 };
 
-insertroof = (req, res, next) => {
+insertroof = async(req, res, next) => {
     try {
         const roof = req.body;
         if (!roof) throw new Error('Text is blank');
@@ -29,7 +29,7 @@ insertroof = (req, res, next) => {
             ProjectID: roof.ProjectID,
             UserID: roof.UserID
         };
-        const ref = db.collection('roof').add(data);
+        const ref = await db.collection('roof').add(data);
         res.json({
             id: ref.id,
             data
@@ -39,7 +39,7 @@ insertroof = (req, res, next) => {
     }
 };
 
-updateroof = (req, res, next) => {
+updateroof = async(req, res, next) => {
     try {
         const id = req.params.id;
         const roof = req.body;
@@ -53,7 +53,7 @@ updateroof = (req, res, next) => {
             ProjectID: roof.ProjectID,
             UserID: roof.UserID
         };
-        const ref = db.collection('roof').doc(id).set(data, { merge: true });
+        const ref = await db.collection('roof').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -63,14 +63,14 @@ updateroof = (req, res, next) => {
     }
 };
 
-deleteroof = (req, res, next) => {
+deleteroof = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('roof')
+        await db.collection('roof')
             .doc(Id)
             .delete();
 

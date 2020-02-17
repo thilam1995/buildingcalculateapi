@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getskylightbyID = (req, res, next) => {
+getskylightbyID = async(req, res, next) => {
     let skylight = [];
     let object = {};
     let id = req.params.id;
-    db.collection('skylight').where("DesignID", "==", id).get()
+    const ref = await db.collection('skylight').where("DesignID", "==", id).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getskylightbyID = (req, res, next) => {
         });
 };
 
-insertskylight = (req, res, next) => {
+insertskylight = async(req, res, next) => {
     try {
         const skylight = req.body;
         if (!skylight) throw new Error('Text is blank');
@@ -31,7 +31,7 @@ insertskylight = (req, res, next) => {
             ProjectID: skylight.ProjectID,
             UserID: skylight.UserID
         };
-        const ref = db.collection('skylight').add(data);
+        const ref = await db.collection('skylight').add(data);
         res.json({
             id: ref.id,
             data
@@ -41,7 +41,7 @@ insertskylight = (req, res, next) => {
     }
 };
 
-updateskylight = (req, res, next) => {
+updateskylight = async(req, res, next) => {
     try {
         const id = req.params.id;
         const skylight = req.body;
@@ -57,7 +57,7 @@ updateskylight = (req, res, next) => {
             ProjectID: skylight.ProjectID,
             UserID: skylight.UserID
         };
-        const ref = db.collection('skylight').doc(id).set(data, { merge: true });
+        const ref = await db.collection('skylight').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -67,14 +67,14 @@ updateskylight = (req, res, next) => {
     }
 };
 
-deleteskylight = (req, res, next) => {
+deleteskylight = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('skylight')
+        await db.collection('skylight')
             .doc(Id)
             .delete();
 

@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getwallbyID = (req, res, next) => {
+getwallbyID = async(req, res, next) => {
     let projectid = req.params.id;
     let wall = [];
     let object = {};
-    db.collection('wall').where("DesignID", "==", projectid).get()
+    const ref = await db.collection('wall').where("DesignID", "==", projectid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getwallbyID = (req, res, next) => {
         });
 };
 
-insertwall = (req, res, next) => {
+insertwall = async(req, res, next) => {
     try {
         const wall = req.body;
         if (!wall) throw new Error('Text is blank');
@@ -29,7 +29,7 @@ insertwall = (req, res, next) => {
             ProjectID: wall.ProjectID,
             UserID: wall.UserID
         };
-        const ref = db.collection('wall').add(data);
+        const ref = await db.collection('wall').add(data);
         res.json({
             id: ref.id,
             data
@@ -39,7 +39,7 @@ insertwall = (req, res, next) => {
     }
 };
 
-updatewall = (req, res, next) => {
+updatewall = async(req, res, next) => {
     try {
         const id = req.params.id;
         const wall = req.body;
@@ -53,7 +53,7 @@ updatewall = (req, res, next) => {
             ProjectID: wall.ProjectID,
             UserID: wall.UserID
         };
-        const ref = db.collection('wall').doc(id).set(data, { merge: true });
+        const ref = await db.collection('wall').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -63,14 +63,14 @@ updatewall = (req, res, next) => {
     }
 };
 
-deletewall = (req, res, next) => {
+deletewall = async(req, res, next) => {
     try {
         console.log(req.params.id);
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('wall')
+        await db.collection('wall')
             .doc(Id)
             .delete();
 

@@ -1,9 +1,10 @@
 const db = require("../connection/firebasecon");
-getfloormodelbyID = (req, res, next) => {
+
+getfloormodelbyID = async(req, res, next) => {
     let designid = req.params.id;
     let floormodel = [];
     let object = {};
-    db.collection('floormodel').where("DesignID", "==", designid).get()
+    const ref = await db.collection('floormodel').where("DesignID", "==", designid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +18,7 @@ getfloormodelbyID = (req, res, next) => {
         });
 };
 
-insertfloormodel = (req, res, next) => {
+insertfloormodel = async(req, res, next) => {
     try {
         const floormodel = req.body;
         if (!floormodel) throw new Error('Text is blank');
@@ -27,7 +28,7 @@ insertfloormodel = (req, res, next) => {
             DesignID: floormodel.DesignID,
             UserID: floormodel.UserID
         };
-        const ref = db.collection('floormodel').add(data);
+        const ref = await db.collection('floormodel').add(data);
         res.json({
             id: ref.id,
             data
@@ -37,7 +38,7 @@ insertfloormodel = (req, res, next) => {
     }
 };
 
-updatefloormodel = (req, res, next) => {
+updatefloormodel = async(req, res, next) => {
     try {
         const id = req.params.id;
         const floormodel = req.body;
@@ -49,7 +50,7 @@ updatefloormodel = (req, res, next) => {
             DesignID: floormodel.DesignID,
             UserID: floormodel.UserID
         };
-        const ref = db.collection('floormodel').doc(id).set(data, { merge: true });
+        const ref = await db.collection('floormodel').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -59,14 +60,14 @@ updatefloormodel = (req, res, next) => {
     }
 };
 
-deletefloormodel = (req, res, next) => {
+deletefloormodel = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('floormodel')
+        await db.collection('floormodel')
             .doc(Id)
             .delete();
 

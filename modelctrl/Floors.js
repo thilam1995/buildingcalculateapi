@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getfloorbyID = (req, res, next) => {
+getfloorbyID = async(req, res, next) => {
     let projectid = req.params.id
     let floor = [];
     let object = {};
-    db.collection('floor').where("DesignID", "==", projectid).get()
+    const ref = await db.collection('floor').where("DesignID", "==", projectid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getfloorbyID = (req, res, next) => {
         });
 };
 
-insertfloor = (req, res, next) => {
+insertfloor = async(req, res, next) => {
     try {
         const floor = req.body;
         if (!floor) throw new Error('Text is blank');
@@ -29,7 +29,7 @@ insertfloor = (req, res, next) => {
             ProjectID: floor.ProjectID,
             UserID: floor.UserID
         };
-        const ref = db.collection('floor').add(data);
+        const ref = await db.collection('floor').add(data);
         res.json({
             id: ref.id,
             data
@@ -39,7 +39,7 @@ insertfloor = (req, res, next) => {
     }
 };
 
-updatefloor = (req, res, next) => {
+updatefloor = async(req, res, next) => {
     try {
         const id = req.params.id;
         const floor = req.body;
@@ -53,7 +53,7 @@ updatefloor = (req, res, next) => {
             ProjectID: floor.ProjectID,
             UserID: floor.UserID
         };
-        const ref = db.collection('floor').doc(id).set(data, { merge: true });
+        const ref = await db.collection('floor').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -63,14 +63,14 @@ updatefloor = (req, res, next) => {
     }
 };
 
-deletefloor = (req, res, next) => {
+deletefloor = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('floor')
+        await db.collection('floor')
             .doc(Id)
             .delete();
 

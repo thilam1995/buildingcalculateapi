@@ -1,9 +1,9 @@
 const db = require("../connection/firebasecon");
-getwindowbyID = (req, res, next) => {
+getwindowbyID = async(req, res, next) => {
     let projectid = req.params.id;
     let window = [];
     let object = {};
-    db.collection('window').where("DesignID", "==", projectid).get()
+    const ref = await db.collection('window').where("DesignID", "==", projectid).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 //console.log(doc.id, '=>', doc.data());
@@ -17,7 +17,7 @@ getwindowbyID = (req, res, next) => {
         });
 };
 
-insertwindow = (req, res, next) => {
+insertwindow = async(req, res, next) => {
     try {
         const window = req.body;
         if (!window) throw new Error('Text is blank');
@@ -32,7 +32,7 @@ insertwindow = (req, res, next) => {
             ProjectID: window.ProjectID,
             UserID: window.UserID
         };
-        const ref = db.collection('window').add(data);
+        const ref = await db.collection('window').add(data);
         res.json({
             id: ref.id,
             data
@@ -42,7 +42,7 @@ insertwindow = (req, res, next) => {
     }
 };
 
-updatewindow = (req, res, next) => {
+updatewindow = async(req, res, next) => {
     try {
         const id = req.params.id;
         const window = req.body;
@@ -59,7 +59,7 @@ updatewindow = (req, res, next) => {
             ProjectID: window.ProjectID,
             UserID: window.UserID
         };
-        const ref = db.collection('window').doc(id).set(data, { merge: true });
+        const ref = await db.collection('window').doc(id).set(data, { merge: true });
         res.json({
             id,
             data
@@ -69,14 +69,14 @@ updatewindow = (req, res, next) => {
     }
 };
 
-deletewindow = (req, res, next) => {
+deletewindow = async(req, res, next) => {
     try {
 
         const Id = req.params.id;
 
         if (!Id) throw new Error('id is blank');
 
-        db.collection('window')
+        await db.collection('window')
             .doc(Id)
             .delete();
 
