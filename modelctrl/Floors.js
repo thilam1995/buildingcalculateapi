@@ -10,7 +10,7 @@ getfloorbyID = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 floor.push(object);
             });
-            res.json(floor);
+            res.status(200).json(floor);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -32,7 +32,7 @@ insertfloor = async(req, res, next) => {
             DateModified: floor.DateModified
         };
         const ref = await db.collection('floor').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -56,7 +56,7 @@ updatefloor = async(req, res, next) => {
             UserID: floor.UserID
         };
         const ref = await db.collection('floor').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -76,7 +76,7 @@ deletefloor = async(req, res, next) => {
             .doc(Id)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: Id,
         })
 

@@ -12,7 +12,7 @@ getdesignbyprojectID = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 design.push(object);
             });
-            res.json(design);
+            res.status(200).json(design);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -28,7 +28,7 @@ getdesignbyid = async(req, res, next) => {
         .then(function (doc) {
             if (doc.exists) {
                 object = { id: doc.id, data: doc.data() }
-                res.json(object);
+                res.status(200).json(object);
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
@@ -53,7 +53,7 @@ getalldesignbyprojectID = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 design.push(object);
             });
-            res.json(design);
+            res.status(200).json(design);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -107,7 +107,7 @@ postdesign = async(req, res, next) => {
             DateUpdate: design.DateUpdate
         };
         const ref = await db.collection('designbuilding').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -139,7 +139,7 @@ updatedesign = async(req, res, next) => {
             DateUpdate: design.DateUpdate
         };
         const ref = await db.collection('designbuilding').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -159,7 +159,7 @@ deletedesign = async(req, res, next) => {
             .doc(Id)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: Id,
         })
 

@@ -10,7 +10,7 @@ getroomhabitbydesignid = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 floormodel.push(object);
             });
-            res.json(floormodel);
+            res.status(200).json(floormodel);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -33,7 +33,7 @@ updateroomhabit = async(req, res, next) => {
             UserID: room.UserID
         };
         const ref = await db.collection('roomhabit').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -58,7 +58,7 @@ postroomhabit = async(req, res, next) =>{
             DateModified: room.DateModified
         };
         const ref = await db.collection('roomhabit').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -78,7 +78,7 @@ deleteroomhabit = async(req, res, next) => {
             .doc(Id)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: Id,
         })
 

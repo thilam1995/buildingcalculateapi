@@ -15,7 +15,7 @@ getProjectbyuserid = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 project.push(object);
             });
-            res.json(project);
+            res.status(200).json(project);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -56,7 +56,7 @@ insertproject = async(req, res, next) => {
             UserID: project.UserID
         };
         const ref = await db.collection('projectbuilding').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -77,7 +77,7 @@ updateProject = async(req, res, next) => {
             DateModified: project.DateModified
         };
         const ref = await db.collection('projectbuilding').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -96,7 +96,7 @@ updateProjectbymodifieddate = async(req, res, next) => {
             DateModified: project.DateModified
         };
         const ref = await db.collection('projectbuilding').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -116,7 +116,7 @@ deleteproject = async(req, res, next) => {
             .doc(projectId)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: projectId,
         })
 

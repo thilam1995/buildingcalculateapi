@@ -10,7 +10,7 @@ getroofskylightmodelbyID = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 roofskylightmodel.push(object);
             });
-            res.json(roofskylightmodel);
+            res.status(200).json(roofskylightmodel);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -30,7 +30,7 @@ insertroofskylightmodel = async(req, res, next) => {
             DateCreated: roofskylightmodel.DateCreated
         };
         const ref = await db.collection('roofskylightmodel').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -53,7 +53,7 @@ updateroofskylightmodel = async(req, res, next) => {
             UserID: roofskylightmodel.UserID
         };
         const ref = await db.collection('roofskylightmodel').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -74,7 +74,7 @@ deleteroofskylightmodel = async(req, res, next) => {
             .doc(Id)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: Id,
         })
 

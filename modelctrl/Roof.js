@@ -10,7 +10,7 @@ getroofbyID = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 roof.push(object);
             });
-            res.json(roof);
+            res.status(200).json(roof);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -31,7 +31,7 @@ insertroof = async(req, res, next) => {
             DateCreated: roof.DateCreated
         };
         const ref = await db.collection('roof').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -55,7 +55,7 @@ updateroof = async(req, res, next) => {
             UserID: roof.UserID
         };
         const ref = await db.collection('roof').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -75,7 +75,7 @@ deleteroof = async(req, res, next) => {
             .doc(Id)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: Id,
         })
 

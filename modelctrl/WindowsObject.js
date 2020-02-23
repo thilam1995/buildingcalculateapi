@@ -10,7 +10,7 @@ getwindowbyID = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 window.push(object);
             });
-            res.json(window);
+            res.status(200).json(window);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -35,7 +35,7 @@ insertwindow = async(req, res, next) => {
             DateModified: window.DateModified
         };
         const ref = await db.collection('window').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -62,7 +62,7 @@ updatewindow = async(req, res, next) => {
             UserID: window.UserID
         };
         const ref = await db.collection('window').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -82,7 +82,7 @@ deletewindow = async(req, res, next) => {
             .doc(Id)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: Id,
         })
 

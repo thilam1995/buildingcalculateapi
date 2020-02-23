@@ -10,7 +10,7 @@ getdoorbyID = async(req, res, next) => {
                 object = { id: doc.id, data: doc.data() }
                 door.push(object);
             });
-            res.json(door);
+            res.status(200).json(door);
         })
         .catch((err) => {
             console.log('Error getting documents', err);
@@ -34,7 +34,7 @@ insertdoor = async(req, res, next) => {
             DateModified: door.DateModified
         };
         const ref = await db.collection('door').add(data);
-        res.json({
+        res.status(200).json({
             id: ref.id,
             data
         });
@@ -61,7 +61,7 @@ updatedoor = async(req, res, next) => {
 
         };
         const ref = await db.collection('door').doc(id).set(data, { merge: true });
-        res.json({
+        res.status(200).json({
             id,
             data
         });
@@ -81,7 +81,7 @@ deletedoor = async(req, res, next) => {
             .doc(Id)
             .delete();
 
-        res.json({
+        res.status(200).json({
             id: Id,
         })
 
