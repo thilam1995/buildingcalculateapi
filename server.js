@@ -27,14 +27,10 @@ app.use('/api', buildingrouter);
 
 
 //start server on port: 8080
-var server = app.listen(8080, function () {
+var server = app.listen(process.env.PORT || 3000, function () {
 
-    var host = server.address().address;
-    var host1 = server.address();
-    console.log(host1);
-    var port = server.address().port;
+    console.log("You are running our web service!")
 
-    console.log("server listening at http://%s:%s", host, port);
 });
 
 module.exports = app;
