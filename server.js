@@ -2,6 +2,7 @@ var express = require('express'); //import express
 var app = express();
 const bodyParser = require('body-parser');
 const buildingrouter = require('./route/apiroute');
+const path = require('path');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -17,7 +18,7 @@ app.use(function (req, res, next) {
 
 //to handle HTTP get request
 app.get('/', function (req, res) {
-    res.status(200).json("Hello! Welcome to Building Calculation API!")
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.use('/api', buildingrouter);
