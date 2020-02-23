@@ -27,7 +27,7 @@ router.post('/login', accountctrl.accountLogin);
 router.get('/project/:id', projectctrl.getProjectbyuserid);
 router.get('/projectid/:projectid', projectctrl.getProjectbyid);
 router.put('/project/:id', projectctrl.updateProject);
-//router.put('/project/updatedate/:id');
+router.put('/project/bydatemodified/:id', projectctrl.updateProjectbymodifieddate);
 router.post('/project', projectctrl.insertproject);
 router.delete('/project/:id', projectctrl.deleteproject);
 

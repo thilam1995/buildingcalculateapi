@@ -86,6 +86,25 @@ updateProject = async(req, res, next) => {
     }
 };
 
+updateProjectbymodifieddate = async(req, res, next) => {
+    try {
+        const id = req.params.id;
+        const project = req.body;
+        if (!id) throw new Error('id is blank');
+        if (!project) throw new Error('Project is blank');
+        const data = {
+            DateModified: project.DateModified
+        };
+        const ref = await db.collection('projectbuilding').doc(id).set(data, { merge: true });
+        res.json({
+            id,
+            data
+        });
+    } catch (e) {
+        next(e);
+    }
+};
+
 deleteproject = async(req, res, next) => {
     try {
 
@@ -112,5 +131,6 @@ module.exports = {
     getProjectbyid,
     updateProject,
     deleteproject,
-    insertproject
+    insertproject,
+    updateProjectbymodifieddate
 }
