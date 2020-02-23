@@ -26,7 +26,9 @@ insertfloormodel = async(req, res, next) => {
             Floor: floormodel.Floor,
             ProjectID: floormodel.ProjectID,
             DesignID: floormodel.DesignID,
-            UserID: floormodel.UserID
+            UserID: floormodel.UserID,
+            DateCreated: floormodel.DateCreated,
+            DateModified: floormodel.DateModified
         };
         const ref = await db.collection('floormodel').add(data);
         res.json({
@@ -48,7 +50,7 @@ updatefloormodel = async(req, res, next) => {
             Floor: floormodel.Floor,
             ProjectID: floormodel.ProjectID,
             DesignID: floormodel.DesignID,
-            UserID: floormodel.UserID
+            UserID: floormodel.UserID,
         };
         const ref = await db.collection('floormodel').doc(id).set(data, { merge: true });
         res.json({

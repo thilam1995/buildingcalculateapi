@@ -30,7 +30,9 @@ insertwindow = async(req, res, next) => {
             Area: window.Area,
             DesignID: window.DesignID,
             ProjectID: window.ProjectID,
-            UserID: window.UserID
+            UserID: window.UserID,
+            DateCreated: window.DateCreated,
+            DateModified: window.DateModified
         };
         const ref = await db.collection('window').add(data);
         res.json({

@@ -29,7 +29,9 @@ insertdoor = async(req, res, next) => {
             Area: door.Area,
             DesignID: door.DesignID,
             ProjectID: door.ProjectID,
-            UserID: door.UserID
+            UserID: door.UserID,
+            DateCreated: door.DateCreated,
+            DateModified: door.DateModified
         };
         const ref = await db.collection('door').add(data);
         res.json({
@@ -55,7 +57,8 @@ updatedoor = async(req, res, next) => {
             Area: door.Area,
             DesignID: door.DesignID,
             ProjectID: door.ProjectID,
-            UserID: door.UserID
+            UserID: door.UserID,
+
         };
         const ref = await db.collection('door').doc(id).set(data, { merge: true });
         res.json({

@@ -26,9 +26,12 @@ insertwallwindowdoormodel = async(req, res, next) => {
             Wall: wallwindowdoormodel.Wall,
             Window: wallwindowdoormodel.Window,
             Door: wallwindowdoormodel.Door,
+            Orientation: wallwindowdoormodel.Orientation,
             ProjectID: wallwindowdoormodel.ProjectID,
             DesignID: wallwindowdoormodel.DesignID,
-            UserID: wallwindowdoormodel.UserID
+            UserID: wallwindowdoormodel.UserID,
+            DateCreated: wallwindowdoormodel.DateCreated,
+            DateModified: wallwindowdoormodel.DateModified
         };
         const ref = await db.collection('wallwindowdoormodel').add(data);
         res.json({
@@ -50,6 +53,7 @@ updatewallwindowdoormodel = async(req, res, next) => {
             Wall: wallwindowdoormodel.Wall,
             Window: wallwindowdoormodel.Window,
             Door: wallwindowdoormodel.Door,
+            Orientation: wallwindowdoormodel.Orientation,
             ProjectID: wallwindowdoormodel.ProjectID,
             DesignID: wallwindowdoormodel.DesignID,
             UserID: wallwindowdoormodel.UserID

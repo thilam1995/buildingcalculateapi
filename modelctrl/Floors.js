@@ -27,7 +27,9 @@ insertfloor = async(req, res, next) => {
             Description: floor.Description,
             DesignID: floor.DesignID,
             ProjectID: floor.ProjectID,
-            UserID: floor.UserID
+            UserID: floor.UserID,
+            DateCreated: floor.DateCreated,
+            DateModified: floor.DateModified
         };
         const ref = await db.collection('floor').add(data);
         res.json({

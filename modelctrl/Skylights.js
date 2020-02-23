@@ -29,7 +29,8 @@ insertskylight = async(req, res, next) => {
             Area: skylight.Area,
             DesignID: skylight.DesignID,
             ProjectID: skylight.ProjectID,
-            UserID: skylight.UserID
+            UserID: skylight.UserID,
+            DateCreated: skylight.DateCreated
         };
         const ref = await db.collection('skylight').add(data);
         res.json({

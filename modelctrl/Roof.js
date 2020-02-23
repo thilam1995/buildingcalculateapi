@@ -27,7 +27,8 @@ insertroof = async(req, res, next) => {
             Description: roof.Description,
             DesignID: roof.DesignID,
             ProjectID: roof.ProjectID,
-            UserID: roof.UserID
+            UserID: roof.UserID,
+            DateCreated: roof.DateCreated
         };
         const ref = await db.collection('roof').add(data);
         res.json({

@@ -26,7 +26,8 @@ insertroofskylightmodel = async(req, res, next) => {
             Skylight: roofskylightmodel.Skylight,
             ProjectID: roofskylightmodel.ProjectID,
             DesignID: roofskylightmodel.DesignID,
-            UserID: roofskylightmodel.UserID
+            UserID: roofskylightmodel.UserID,
+            DateCreated: roofskylightmodel.DateCreated
         };
         const ref = await db.collection('roofskylightmodel').add(data);
         res.json({

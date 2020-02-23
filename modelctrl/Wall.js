@@ -27,7 +27,9 @@ insertwall = async(req, res, next) => {
             Description: wall.Description,
             DesignID: wall.DesignID,
             ProjectID: wall.ProjectID,
-            UserID: wall.UserID
+            UserID: wall.UserID,
+            DateCreated: wall.DateCreated,
+            DateModified: wall.DateModified
         };
         const ref = await db.collection('wall').add(data);
         res.json({
