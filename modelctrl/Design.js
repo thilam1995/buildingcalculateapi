@@ -71,7 +71,7 @@ getdesignbydatecreated = async(req, res, next) => {
                 //console.log(doc.id, '=>', doc.data());
                 if(doc.exists){
                     object = { id: doc.id, data: doc.data() };
-                    res.json(object);
+                    res.status(200).json(object);
                 }else{
                     res.status(400).json("No document found!");
                 }
@@ -96,7 +96,7 @@ postdesign = async(req, res, next) => {
             CompletedBy: design.CompletedBy,
             DrawingSet: design.DrawingSet,
             Typology: design.Typology,
-            FloorArea: design.FloorArea,
+            FloorArea: Number(design.FloorArea),
             ProjectID: design.ProjectID,
             DateCreated: design.DateCreated,
             Climatetype: design.Climatetype,
@@ -128,7 +128,7 @@ updatedesign = async(req, res, next) => {
             CompletedBy: design.CompletedBy,
             DrawingSet: design.DrawingSet,
             Typology: design.Typology,
-            FloorArea: design.FloorArea,
+            FloorArea: Number(design.FloorArea),
             ProjectID: design.ProjectID,
             DateCreated: design.DateCreated,
             Climatetype: design.Climatetype,

@@ -27,13 +27,14 @@ getProjectbyid = async(req, res, next) => {
         let id = req.params.projectid;
         if (!id) throw new Error('id is blank');
         else {
-            const project = await db.collection('projectbuilding').doc(id).get();
-            project.then(e => {
-                res.json({
+            const project = await db.collection('projectbuilding').doc(id).get()
+            .then(e => {
+                res.status(200).json({
                     id: e.id,
                     data: e.data()
                 });
             }).catch(e => {
+                res.status(400).send(e);
                 throw new Error('project does not exists');
             });
 
