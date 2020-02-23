@@ -17,8 +17,7 @@ app.use(function (req, res, next) {
 
 //to handle HTTP get request
 app.get('/', function (req, res) {
-    console.log("Get Request");
-    res.send("Get Request");
+    res.status(200).json("Hello! Welcome to Building Calculation API!")
 });
 
 app.use('/api', buildingrouter);
