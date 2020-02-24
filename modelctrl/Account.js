@@ -93,7 +93,7 @@ registerAccount = async(req, res, next) => {
                     <h3>Confirmation Email</h3>
                     <p>Hi ${account.FirstName},</p>
                     <p>Thanks you for your register at Heat Loss Calculation App. We would like you to go the link below to start login.<p>
-                    <p><a href="https://relaxed-allen-73f5dc.netlify.com">Heat Loss App Link</a></p>
+                    <p><a href="https://buildingcalculationtool2020.netlify.com">Heat Loss App Link</a></p>
                     `;
                     let testAccount = nodemailer.createTestAccount();
 
