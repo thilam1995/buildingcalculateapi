@@ -30,8 +30,7 @@ insertdoor = async(req, res, next) => {
             DesignID: door.DesignID,
             ProjectID: door.ProjectID,
             UserID: door.UserID,
-            DateCreated: door.DateCreated,
-            DateModified: door.DateModified
+            DateCreated: door.DateCreated
         };
         const ref = await db.collection('door').add(data);
         res.status(200).json({

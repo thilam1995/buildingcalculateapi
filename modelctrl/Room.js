@@ -54,8 +54,7 @@ postroomhabit = async(req, res, next) =>{
             ProjectID: room.ProjectID,
             DesignID: room.DesignID,
             UserID: room.UserID,
-            DateCreated: room.DateCreated,
-            DateModified: room.DateModified
+            DateCreated: room.DateCreated
         };
         const ref = await db.collection('roomhabit').add(data);
         res.status(200).json({
