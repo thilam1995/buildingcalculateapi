@@ -30,8 +30,7 @@ insertwallwindowdoormodel = async(req, res, next) => {
             ProjectID: wallwindowdoormodel.ProjectID,
             DesignID: wallwindowdoormodel.DesignID,
             UserID: wallwindowdoormodel.UserID,
-            DateCreated: wallwindowdoormodel.DateCreated,
-            DateModified: wallwindowdoormodel.DateModified
+            DateCreated: wallwindowdoormodel.DateCreated
         };
         const ref = await db.collection('wallwindowdoormodel').add(data);
         res.json({
