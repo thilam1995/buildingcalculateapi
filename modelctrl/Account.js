@@ -75,7 +75,6 @@ registerAccount = async(req, res, next) => {
             async(snapshot) => {
                 if (snapshot.size() > 0) {
                     res.status(400).json("Sorry! The account is existed!");
-                    return;
                 } else {
                     const data = {
                         FirstName: account.FirstName,
@@ -89,13 +88,13 @@ registerAccount = async(req, res, next) => {
                         data
                     });
 
-                    const output = `
-                    <h3>Confirmation Email</h3>
-                    <p>Hi ${account.FirstName},</p>
-                    <p>Thanks you for your register at Heat Loss Calculation App. We would like you to go the link below to start login.<p>
-                    <p><a href="https://buildingcalculationtool2020.netlify.com">Heat Loss App Link</a></p>
-                    `;
-                    let testAccount = nodemailer.createTestAccount();
+                    // const output = `
+                    // <h3>Confirmation Email</h3>
+                    // <p>Hi ${account.FirstName},</p>
+                    // <p>Thanks you for your register at Heat Loss Calculation App. We would like you to go the link below to start login.<p>
+                    // <p><a href="https://buildingcalculationtool2020.netlify.com">Heat Loss App Link</a></p>
+                    // `;
+                    // let testAccount = nodemailer.createTestAccount();
 
                     // create reusable transporter object using the default SMTP transport
                     // const transporter = nodemailer.createTransport({
@@ -110,35 +109,35 @@ registerAccount = async(req, res, next) => {
                     //     }
                     // });
 
-                    const transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        auth: {
-                            user: 'thilam95foehn@gmail.com',
-                            pass: passEncrypt
-                        },
-                        tls: {
-                            rejectUnauthorized: false
-                        }
-                    });
+                    // const transporter = nodemailer.createTransport({
+                    //     service: 'gmail',
+                    //     auth: {
+                    //         user: 'thilam95foehn@gmail.com',
+                    //         pass: passEncrypt
+                    //     },
+                    //     tls: {
+                    //         rejectUnauthorized: false
+                    //     }
+                    // });
 
                     // send mail with defined transport object
-                    let info = transporter.sendMail({
-                        from: '"Heatloss Cal No Reply" <thilam95foehn@gmail.com>', // sender address
-                        to: account.Email, // list of receivers
-                        subject: 'Hello ✔', // Subject line
-                        text: 'Hello world?', // plain text body
-                        html: output // html body
-                    }, (err, info) => {
-                        if (err) {
-                            return console.error(err);
-                        }
-                        console.log('Message sent: %s', info.messageId);
-                        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+                    // let info = transporter.sendMail({
+                    //     from: '"Heatloss Cal No Reply" <thilam95foehn@gmail.com>', // sender address
+                    //     to: account.Email, // list of receivers
+                    //     subject: 'Hello ✔', // Subject line
+                    //     text: 'Hello world?', // plain text body
+                    //     html: output // html body
+                    // }, (err, info) => {
+                    //     if (err) {
+                    //         return console.error(err);
+                    //     }
+                    //     console.log('Message sent: %s', info.messageId);
+                    //     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-                        // Preview only available when sending through an Ethereal account
-                        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-                        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-                    });
+                    //     // Preview only available when sending through an Ethereal account
+                    //     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                    //     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                    // });
                 }
             }
         );
