@@ -73,7 +73,7 @@ registerAccount = async(req, res, next) => {
         var accountcollect = db.collection('account');
         let query = await accountcollect.where("Email", "==", account.Email).limit(1).get().then(
             async(snapshot) => {
-                if (!snapshot.empty) {
+                if (snapshot.empty) {
                     res.status(400).json("Sorry! The account is existed!");
                     return;
                 } else {
